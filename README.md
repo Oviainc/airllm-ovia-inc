@@ -1,4 +1,71 @@
-> **Ovia Inc fork — modification reference.** We maintain this fork of [lyogavin/airllm](https://github.com/lyogavin/airllm). **Modifications by Ovia Inc:** this reference note, added November 2026 as part of the collection-wide documentation pass; the expanded Ovia README treatment (Ovia section, story, topics and description) follows in the daily improvement queue. Upstream code and content are otherwise unchanged from the fork point, except where a later commit in this repository says so. Upstream credit: lyogavin. Licence: Apache-2.0 (see LICENSE where present).
+# Ovia Inc — AirLLM (fork of lyogavin/airllm)
+
+![Ovia Inc — AirLLM logo from the upstream project assets](assets/airllm_logo.png)
+
+We maintain this fork of [lyogavin/airllm](https://github.com/lyogavin/airllm), AirLLM: inference that dramatically reduces memory use, letting large language models run on a single small GPU — 70B models on a single 4GB GPU card without quantization, distillation, or pruning, with larger results recorded upstream for 405B, DeepSeek-V3, and sparse mixture-of-experts models. Upstream credit: lyogavin and the AirLLM contributors. Licence: Apache-2.0 (see LICENSE).
+
+**Our main site:** https://oviainc.github.io/ai-services/
+
+**Upstream repository:** https://github.com/lyogavin/airllm
+
+## What this is
+
+The infrastructure shelf of our collection, held for local large-model inference on limited hardware:
+
+- The complete upstream project at the fork point (Python, the `air_llm` package, `examples/`, `eval/`, `training/`, `rlhf/`, `scripts/`, and `requirements.txt`): layer-by-layer and, for sparse models, expert-by-expert streaming that keeps only the part of a model needed for the current step in GPU memory.
+- The model results recorded in the upstream README preserved below: 70B on 4GB, Llama 3.1 405B on 8GB, DeepSeek-V3 (671B) on about 12GB, and Kimi K3 (2.8T) on under 4GB, plus Qwen3.8-27B support added in the August 2026 updates at the fork point.
+- A single `AutoModel` entry point across model families, with configurations for compression (recorded upstream as a 3x inference speed-up), 8-bit and 4-bit quantization options, CPU inference, and macOS support.
+- Example notebooks and supporting material for the supported-model list preserved below, covering Llama, Qwen, DeepSeek, Mistral, ChatGLM, Baichuan, InternLM, Phi, Gemma, and further families named upstream.
+
+No project homepage is recorded on the fork or upstream at this pass, so no homepage is proposed. Upstream carries about 43,399 stars and a large fork network at the time of this pass.
+
+## Story
+
+AirLLM opened as a public project on June 12, 2023, under lyogavin, with an initial version recorded in the upstream updates on November 20, 2023. The upstream record preserved below shows the shape of the work from the start: safetensors support and the top open models in December 2023, compression for a 3x speed-up, prefetching to overlap loading and compute, an `AutoModel` that detects model type without a model class argument, macOS support for 70B models, and then steady expansion — Llama 3, Llama 3.1 405B, quantization options, CPU inference, Qwen2.5, and the 2026 generation of very large and sparse models through one entry point. The companion Anima work in this repository (`anima_100k`, `anima_logo.png`) sits beside the inference core as part of the upstream project as received.
+
+We forked the project on August 21, 2026, at the August 20, 2026 snapshot (tip commit 8e45623, a star-history refresh over the Qwen3.8-27B support release), into the infrastructure and other group of the Oviainc collection. In role, this fork is the local-inference seat of that group: where the cloud shelves hold emulators and access layers, this fork holds a way to run very large open models on a single small GPU on own hardware, at no cloud cost. That shape matches the standing preference for local, low-cost operation wherever the work allows, and gives evaluation a path that does not wait on rented accelerators.
+
+What we evaluate here is the inference trade in practice, with its limits kept visible:
+
+- **Memory against speed** — streaming layers and experts from disk cuts memory dramatically; the cost is throughput. Prefetching and compression numbers recorded upstream are the claims to test on own hardware and own models, not to repeat as results.
+- **Model coverage in practice** — the supported list is broad and still growing upstream; which families load cleanly through `AutoModel`, and which need version-pinned dependencies (the upstream Kimi K3 notes name exact transformer and attention requirements), decides real usability.
+- **Local fit** — a 4GB GPU path, CPU inference, and macOS support decide whether large-model checks can run beside agent and data work on machines already on hand, or still need a dedicated box.
+- **Dependency and maintenance shape** — a fast upstream cadence, model-specific requirements, and gated-model handling in the FAQ preserved below decide the upkeep cost of staying current.
+
+Where the project fits our work:
+
+- **AI agents** — agent systems need a model behind the harness; a local path to large open models allows harness, tool, and prompt behaviour to be checked without a hosted API in the loop and without per-call spend.
+- **Context engineering** — larger local models change what fits in a working evaluation: long-context behaviour, compression trade-offs, and model choice for a given context budget can be tested directly rather than inferred from a hosted tier.
+- **Business intelligence and data** — a lighter fit: local inference keeps document and data work on own hardware during evaluation, which matters when the material should not leave the building before a deployment shape is chosen.
+- **Virtual production** — a lighter fit again: on-set and in-studio tools benefit from models that run on a single workstation GPU, with no cloud round trip, for drafting, tagging, and assistive steps in a media pipeline.
+
+## Modifications by Ovia Inc
+
+Documentation only. Upstream code and content are unchanged from the fork point, except for documentation notes added in November 2026: a modification reference on November 4, 2026, replaced by this expanded treatment (Ovia section, story, picture, and repository details) on November 25, 2026. Where a later commit in this repository says otherwise, that commit governs.
+
+## Sync status
+
+Behind upstream, by design of this pass. This fork carries the August 20, 2026 snapshot (tip commit 8e45623) plus documentation commits of our own (November 4, 2026, replaced and expanded November 25, 2026). A cross-repository compare at this pass records the fork as diverged, ahead by 1 documentation commit and behind by 144 commits, at merge base 8e45623, with upstream HEAD e8a270d pushed November 25, 2026, including the 4.0.1 release of November 23, 2026. No sync was applied in this pass, and a reviewed sync is recommended for Ja when the infrastructure shelf needs a current upstream base.
+
+## Related repositories
+
+- [ai-services](https://github.com/Oviainc/ai-services) — our flagship site: AI agents, machine learning in production, and AI products for business
+- [ovia-inc-floci](https://github.com/Oviainc/ovia-inc-floci) — the local-cloud seat of the infrastructure shelf: a free local AWS emulator for development and testing on own hardware
+- [ollama-ovia-inc](https://github.com/Oviainc/ollama-ovia-inc) — local model serving in the collection, held beside this fork for the local-inference comparison
+- [OVIA-INC-MiniCPM-V](https://github.com/Oviainc/OVIA-INC-MiniCPM-V) — the perception layer of the video and multimodal shelf: small multimodal models for on-device work
+- [token_reducer](https://github.com/Oviainc/token_reducer) — our own small context-engineering utility for reducing large text files, part of the same local, low-cost tooling preference
+
+## Working with us
+
+Start from our site: https://oviainc.github.io/ai-services/ — the contact form there is the fastest way to reach us.
+
+## Licence
+
+Apache-2.0, as recorded in the LICENSE file in this fork and upstream. Upstream credit remains with lyogavin and the AirLLM contributors.
+
+---
+
+Ovia Inc — Artificial Intelligence & Context Engineering. Based in Canada, working wherever the work is.
 
 ---
 
@@ -390,4 +457,4 @@ Welcomed contributions, ideas and discussions!
 
 If you find it useful, please ⭐ or buy me a coffee! 🙏
 
-[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://bmc.link/lyogavinQ)
+[!"Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://bmc.link/lyogavinQ)
